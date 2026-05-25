@@ -67,6 +67,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const receiptMobile = document.getElementById("receiptMobile");
   const receiptSkill = document.getElementById("receiptSkill");
 
+  // Error Alert Banner elements
+  const errorAlert = document.getElementById("formSubmitErrorAlert");
+  const errorAlertMsg = document.getElementById("formSubmitErrorMsg");
+  const btnCloseAlert = document.getElementById("btnCloseAlert");
+
+  // Digital Ticket elements
+  const ticketContainer = document.getElementById("digitalTicketContainer");
+  const ticketNumberVal = document.getElementById("ticketNumberVal");
+  const ticketPlayerName = document.getElementById("ticketPlayerName");
+  const ticketPlayerSkill = document.getElementById("ticketPlayerSkill");
+  const ticketTimestamp = document.getElementById("ticketTimestamp");
+
   // --- REGULAR EXPRESSIONS ---
   const mobileRegex = /^[0-9]{10}$/; // Exactly 10 digits
 
@@ -336,9 +348,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
+  // Close alert button listener
+  if (btnCloseAlert) {
+    btnCloseAlert.addEventListener('click', () => {
+      errorAlert.classList.add('hidden');
+    });
+  }
+
+  // Helper to display error banner inline
+  const displayInlineError = (msg) => {
+    if (errorAlert && errorAlertMsg) {
+      errorAlertMsg.textContent = msg || "Network connection failed. Verify your internet status and check the Apps Script web app configurations.";
+      errorAlert.classList.remove('hidden');
+      errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   // --- FORM SUBMIT INTERCEPTOR ---
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Reset error banner
+    if (errorAlert) {
+      errorAlert.classList.add('hidden');
+    }
 
     // Trigger validations
     if (!validateForm()) {
@@ -352,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Check if script URL is configured
     if (WEB_APP_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
-      displayErrorModal("Google Apps Script URL is not configured. Please read README.md to configure your backend.");
+      displayInlineError("Google Apps Script URL is not configured. Please read README.md to configure your backend.");
       return;
     }
 
@@ -394,34 +427,53 @@ document.addEventListener("DOMContentLoaded", () => {
       if (result.status === "success") {
         loadingStatusText.textContent = "Finalizing transaction details...";
 
-        // Populate receipt values
-        receiptName.textContent = payload.name;
-        receiptMobile.textContent = payload.mobile;
-        receiptSkill.textContent = payload.skill;
+        // Populate receipt values for the ticket
+        if (ticketNumberVal) ticketNumberVal.textContent = `Ticket Number: ${payload.mobile}`;
+        if (ticketPlayerName) ticketPlayerName.textContent = payload.name;
+        if (ticketPlayerSkill) ticketPlayerSkill.textContent = payload.skill;
+        if (ticketTimestamp) {
+          const now = new Date();
+          const options = { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit'
+          };
+          ticketTimestamp.textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Hide form and show ticket
+        form.classList.add('hidden');
 
         // Reset the form values
         form.reset();
         clearFileField('photo');
         clearFileField('screenshot');
 
-        // Hide loader & Show success modal
+        // Hide loader & Show ticket screen
         setTimeout(() => {
           loadingOverlay.classList.add('hidden');
-          successModal.classList.remove('hidden');
+          if (ticketContainer) {
+            ticketContainer.classList.remove('hidden');
+            ticketContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }, 800);
 
       } else {
-        throw new Error(result.message || "An unknown database script error occurred.");
+        // Display visible error message on the screen alerting the user
+        loadingOverlay.classList.add('hidden');
+        displayInlineError(result.message || "An error occurred during submission.");
       }
 
     } catch (err) {
       console.error("Submission Error:", err);
       loadingOverlay.classList.add('hidden');
-      displayErrorModal(err.message);
+      displayInlineError(err.message);
     }
   });
 
-  // Modal UI close listeners
+  // Modal UI close listeners (kept as fallbacks/cleanup)
   btnSuccessClose.addEventListener('click', () => {
     successModal.classList.add('hidden');
   });

@@ -69,6 +69,91 @@
         </div>
       </header>
 
+      <!-- Inline Error Alert -->
+      <div class="error-alert hidden" id="formSubmitErrorAlert">
+        <span class="error-alert-icon">⚠️</span>
+        <div class="error-alert-content">
+          <h4 class="error-alert-title">Registration Failed</h4>
+          <p class="error-alert-message" id="formSubmitErrorMsg">An error occurred.</p>
+        </div>
+        <button type="button" class="btn-close-alert" id="btnCloseAlert">&times;</button>
+      </div>
+
+      <!-- Digital Registration Ticket -->
+      <div id="digitalTicketContainer" class="ticket-container hidden">
+        <div class="ticket">
+          <!-- Ticket Header -->
+          <div class="ticket-header">
+            <div class="ticket-checkmark-wrap">
+              <svg class="ticket-success-checkmark" viewBox="0 0 52 52">
+                <circle class="success-checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                <path class="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+              </svg>
+            </div>
+            <h2 class="ticket-title">Registration Successful!</h2>
+          </div>
+          
+          <!-- Ticket Divider (Dashed with notches) -->
+          <div class="ticket-divider">
+            <div class="notch notch-left"></div>
+            <div class="ticket-divider-line"></div>
+            <div class="notch notch-right"></div>
+          </div>
+          
+          <!-- Ticket Body -->
+          <div class="ticket-body">
+            <div class="ticket-number-label">TICKET NUMBER</div>
+            <div class="ticket-number" id="ticketNumberVal">Ticket Number: -</div>
+            
+            <div class="ticket-details-grid">
+              <div class="ticket-detail-item">
+                <span class="ticket-detail-label">Player Name</span>
+                <span class="ticket-detail-val" id="ticketPlayerName">-</span>
+              </div>
+              <div class="ticket-detail-item">
+                <span class="ticket-detail-label">Player Skill</span>
+                <span class="ticket-detail-val" id="ticketPlayerSkill">-</span>
+              </div>
+              <div class="ticket-detail-item">
+                <span class="ticket-detail-label">Status</span>
+                <span class="ticket-detail-val text-gold bold">VERIFIED SUBMIT</span>
+              </div>
+              <div class="ticket-detail-item">
+                <span class="ticket-detail-label">Date & Time</span>
+                <span class="ticket-detail-val" id="ticketTimestamp">-</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Ticket Barcode or Graphic element for premium look -->
+          <div class="ticket-graphic">
+            <div class="barcode">
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+              <span class="barcode-line"></span>
+            </div>
+          </div>
+        </div>
+        
+        <p class="screenshot-instruction">Please take a screenshot of this ticket for future reference.</p>
+      </div>
+
       <!-- Main Registration Form -->
       <form id="registrationForm" class="registration-form" novalidate>
 
